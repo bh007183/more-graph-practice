@@ -18,6 +18,7 @@ app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 
 db.once('open', () => {
+    console.log("db connected")
 
     app.listen(PORT, ()=>{
         console.log( `server running at http://localhost:${PORT}`)

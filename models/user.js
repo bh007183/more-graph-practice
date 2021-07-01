@@ -9,14 +9,21 @@ const userSchema = new Schema({
     password: {
         type: String
     },
-    giffs: {
-        type: Schema.Types.ObjectId,
-        ref: "Giff"
-    },
-    friends: {
-        type: Schema.Types.ObjectId,
-        ref: "User"
-    }
+    giffs:[
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Giff"
+        }
+
+    ] ,
+    friends:[
+        {
+            type: Schema.Types.ObjectId,
+            ref: "User"
+        }
+
+    ]
+     
 })
 
 userSchema.pre('save', async function(next){

@@ -47,12 +47,39 @@ const resolvers = {
             
 
         },
-        addFriend: async function(parent, args){
-            console.log(args)
+        addFriend: async function(parent, {username}, context){
+           
+            if(!context.user){
+                throw new AuthenticationError("Session closed")
+            }else{
+                const friend = await User.findOne({username}).select('-password')
+                if(friend){
+
+                    const data = await User.findByIdAndUpdate(context.user._id, {$set: {friends: friend._id}}, { new: true }).select("-password").populate("friends")
+                    return data
+
+                }else{
+                    throw new Error("No User Found")
+                }
+
+            }
 
         },
-        postGiff: async function(parent, args){
-            console.log(args)
+        postGiff: async function(parent, args, context){
+            if(!context.user){
+                throw new AuthenticationError("Session closed")
+            }else{
+                const friend = await User.findOne(args.username).select('-password')
+                if(friend){
+
+                    const data = await User.create(context.user._id, {$push: {giffs: friend._id}}, { new: true }).select("-password")
+                    return data
+
+                }else{
+                    throw new Error("No User Found")
+                }
+
+            }
 
         },
         likeGiff: async function(parent, args){

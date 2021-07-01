@@ -22,8 +22,8 @@ type Giff{
 }
 
 type Auth{
-    user: ID!
-    data: User
+    token: ID!
+    user: User
 }
 
 type Query{
@@ -37,7 +37,7 @@ type Query{
 type Mutation{
     postUser(username: String!, password: String!): User
     login(username: String!, password: String!): Auth
-    addFriend(_id: ID!): User
+    addFriend(username: String!): User
     postGiff(title: String!, url: String!): Giff
     likeGiff(reactions: Boolean): [Reaction]
 }
