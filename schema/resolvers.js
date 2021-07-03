@@ -55,7 +55,7 @@ const resolvers = {
                 const friend = await User.findOne({username}).select('-password')
                 if(friend){
 
-                    const data = await User.findByIdAndUpdate(context.user._id, {$set: {friends: friend._id}}, { new: true }).select("-password").populate("friends")
+                    const data = await User.findByIdAndUpdate(context.user._id, {$addToSet: {friends: friend._id}}, { new: true }).select("-password").populate("friends")
                     return data
 
                 }else{
@@ -65,19 +65,12 @@ const resolvers = {
             }
 
         },
-        postGiff: async function(parent, args, context){
+        postGiff: async function(parent, {title, url}, context){
             if(!context.user){
                 throw new AuthenticationError("Session closed")
             }else{
-                const friend = await User.findOne(args.username).select('-password')
-                if(friend){
-
-                    const data = await User.create(context.user._id, {$push: {giffs: friend._id}}, { new: true }).select("-password")
-                    return data
-
-                }else{
-                    throw new Error("No User Found")
-                }
+                const user = await User.findByIdAndUpdate(context.user._id, {$addToSet: {giffs: {title, url}}}, { new: true }).select("-password").populate("friends")
+                
 
             }
 
